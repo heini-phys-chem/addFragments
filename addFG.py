@@ -1,5 +1,5 @@
 import sys
-import glob
+#import glob
 import re
 import openbabel as ob
 
