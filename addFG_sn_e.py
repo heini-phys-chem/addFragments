@@ -5,7 +5,7 @@ import openbabel as ob
 
 def opt_mmff_FG(mol, numAtoms, outfile):
   # initialize force field and constraint classes
-  MMFF = ob.OBForceField.FindType("MMFF94")
+  MMFF = ob.OBForceField.FindType("UFF")
   constraints = ob.OBFFConstraints()
   conv = ob.OBConversion()
 
