@@ -34,17 +34,17 @@ int main(int argc, char *argv[])
 
 	// cmd line arguments
 	std::string file_in = argv[1];
-	//std::string file_out = argv[2];
-	std::string file_out = "test.xyz";
+	std::string file_out = argv[2];
   int position = atoi(argv[3]);
 	std::string toDelete = argv[4];
 	std::string fgE = argv[5];
 
+	// declare variables
 	int C;
-	std::vector<int> to_delete;
 	int Idx_to_connect;
+	std::vector<int> to_delete;
 
-	// get number of C atom to eschange the FG
+	// get number of C atom to exchange the FG
 	std::string base_in = file_in.substr(0, file_in.size()-4);
 	if( (position == 1) || (position == 2) ) {
 		C = 1;
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 		C = 2;
 	}
 
-	// OpenBabel part 
+	// declare OpenBabel variables 
 	OpenBabel::OBMol mol, FG;
 	OpenBabel::vector3 vec;
 	OpenBabel::OBBuilder build;
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 	// output stream
 	std::ofstream ofs(file_out);
 
-	// get vector of idx of atoms to delete
+	// get vector contianing idx's of atoms to delete
 	if(toDelete == "A") {
 		to_delete = get_H(C, mol);
 	} else if (toDelete == "B") {
@@ -91,8 +91,9 @@ int main(int argc, char *argv[])
 	// delete FG
 	mol = delete_FG(to_delete, mol);
 
-	//vec = (atomPrime->GetX(), atomPrime->GetY(), atomPrime->GetZ());
+	// get Idx of last atom
 	Idx_to_connect = mol.NumAtoms();
+
 	// add new FG
 	mol += FG;
 	build.Connect(mol, C, Idx_to_connect + 1, 1);
