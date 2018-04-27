@@ -15,11 +15,13 @@
 #include <openbabel/babelconfig.h>
 #include <openbabel/builder.h>
 #include <openbabel/math/vector3.h>
+#include <openbabel/obiter.h>
 
 int main(int argc, char *argv[]) {
 
 OpenBabel::OBMol mol;
 OpenBabel::OBAtom *atom;
+OpenBabel::OBBond *b;
 OpenBabel::OBConversion conv;
 conv.SetInAndOutFormats("xyz","xyz");
 
@@ -35,20 +37,20 @@ ifs.open(filename.c_str());
 conv.Read(&mol, &ifs);
 ifs.close();
 
-OpenBabel::OBForceField* pFF = OpenBabel::OBForceField::FindForceField("UFF");
-
-OpenBabel::OBFFConstraints constraints;
-for (int a=1; a <= 5; a++) {
-  atom = mol.GetAtom(a);
-  //std::cout << atom << std::endl;
-  constraints.AddAtomConstraint(atom->GetIdx());
+FOR_BONDS_OF_MOL(b, mol)
+{
+  if(((*b).GetBeginAtom()->IsOxygen()) && ((*b).GetEndAtom()->IsOxygen()))
+  {
+    mol.DeleteBond(&*b);
+    break;
+  }
 }
 
-//pFF->Setup(mol, constraints);
+OpenBabel::OBForceField* pFF = OpenBabel::OBForceField::FindForceField("UFF");
 
-if (!pFF->Setup(mol, constraints)) {
+if (!pFF->Setup(mol)) {
       std::cerr << "ERROR: could not setup force field." << std::endl;
-      }
+}
 
 //std::cout << "energy: " << pFF->Energy() << std::endl;
 
