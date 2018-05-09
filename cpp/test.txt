@@ -1,0 +1,10 @@
+e2ts_C_A_A_D_A_B e2ts_C_A_A_A_A_B
+e2ts_C_A_D_A_A_B e2ts_C_A_A_A_A_B
+e2ts_C_C_A_A_A_B e2ts_C_A_A_A_A_B
+e2ts_A_A_D_E_B_A e2ts_B_A_D_E_B_A
+e2ts_B_A_A_E_B_A e2ts_B_A_D_E_B_A
+e2ts_B_A_D_C_B_A e2ts_B_A_D_E_B_A
+e2ts_B_A_E_E_B_A e2ts_B_A_D_E_B_A
+e2ts_B_E_D_E_B_A e2ts_B_A_D_E_B_A
+e2ts_C_A_D_E_B_A e2ts_B_A_D_E_B_A
+e2ts_D_A_D_E_B_A e2ts_B_A_D_E_B_A

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
 #include <vector>
 #include <math.h>
@@ -24,33 +25,20 @@
 #include "utils.hpp"
 
 
+
 int main(int argc, char *argv[])
 {
 	// check # of cmd line argumentas
-	if( argc < 6 ) {
+	if( argc < 2 ) {
 		std::cout << "\033[1;31m cmd line should look like: ./main <file_in> <file_out> <position> <FG to delete> <FG to add> \033[1;0m" << std::endl;
 		return 1;
 	}
 
+	std::cout << "\033[1;31m start new molecule \033[1;0m" << std::endl;
+
 	// cmd line arguments
 	std::string file_in = argv[1];
 	std::string file_out = argv[2];
-  int position = atoi(argv[3]);
-	std::string toDelete = argv[4];
-	std::string fgE = argv[5];
-
-	// declare variables
-	int C;
-	int Idx_to_connect;
-	std::vector<int> to_delete;
-
-	// get number of C atom to exchange the FG
-	std::string base_in = file_in.substr(0, file_in.size()-4);
-	if( (position == 1) || (position == 2) ) {
-		C = 1;
-	} else {
-		C = 2;
-	}
 
 	// declare OpenBabel variables 
 	OpenBabel::OBMol mol, FG;
@@ -60,22 +48,78 @@ int main(int argc, char *argv[])
 	convMol.SetInAndOutFormats("xyz","xyz");
 	convFG.SetInAndOutFormats("xyz","xyz");
 
+	// declare variables
+	int C;
+	int numAtomFG;
+	int Idx_to_connect;
+  int position = 0;
+	std::vector<int> to_delete;
+	std::string toDelete;
+	std::string fgE;
+	std::vector<std::string> in;
+	std::vector<std::string> out;
+
+	// get input variables
+	in = get_R(file_in);
+	out = get_R(file_out);
+
+
+	for( int i=0; i < 4; i++) {
+		if( in[i] == out[i] ) {
+			continue;
+		} else {
+			toDelete = in[i];
+			fgE = out[i];
+			position = i+1;
+		}
+	}
+
+	std::string out_file_name;
+	out_file_name.append(file_in);
+	out_file_name.insert(0,"xyz_out/");
+	out_file_name.append("-");
+	out_file_name.append(file_out);
+	out_file_name.append(".xyz");
+
+	// some fancy print statements
+	std::cout << file_in.substr(5,7) << std::endl;
+	std::cout << file_out.substr(5,7) << std::endl;
+
+	std::cout << "\nposition: " << position << std::endl;
+	std::cout << "\ntoDelete: " << toDelete << std::endl;
+	std::cout << "\nfgE: " << fgE << std::endl;
+	std::cout << "\nout_file: : " << out_file_name << std::endl;
+
+	// get Idx of C atom to exchange the FG
+	std::string base_in = file_in.substr(0, file_in.size()-4);
+	if( (position == 1) || (position == 2) ) {
+		C = 1;
+		if( in[0] == in[1] ) exit(EXIT_FAILURE);
+	} else {
+		C = 2;
+		if( in[2] == in[3] ) exit(EXIT_FAILURE);
+	}
+
 	// read in molecule 
+	file_in.insert(0,"xyz_in/");
+	file_in.append(".xyz");
 	std::ifstream ifs_mol;
 	ifs_mol.open(file_in.c_str());
 	convMol.Read(&mol, &ifs_mol);
 	ifs_mol.close();
 
 	// read in FG
+	fgE.append(".xyz");
+	fgE.insert(0,"xyz/");
 	std::ifstream ifs_fg;
 	ifs_fg.open(fgE.c_str());
 	convFG.Read(&FG, &ifs_fg);
 	ifs_fg.close();
 
-	// output stream
-	std::ofstream ofs(file_out);
+	// output streams
+	std::ofstream ofs(out_file_name);
 
-	// get vector contianing idx's of atoms to delete
+	// get cpp vector contianing idx's of atoms to delete
 	if(toDelete == "A") {
 		to_delete = get_H(C, mol);
 	} else if (toDelete == "B") {
@@ -88,6 +132,9 @@ int main(int argc, char *argv[])
 		to_delete = get_NH2(C, mol);
 	}
 
+	// get vector3 of position of FG
+	vec = get_vector(to_delete, mol, C);
+
 	// delete FG
 	mol = delete_FG(to_delete, mol);
 
@@ -96,10 +143,11 @@ int main(int argc, char *argv[])
 
 	// add new FG
 	mol += FG;
-	build.Connect(mol, C, Idx_to_connect + 1, 1);
+	build.Connect(mol, C, Idx_to_connect + 1, vec, 1);
 
 	// optimize new FG with UFF 
-	mol = opt_ff(mol);
+	numAtomFG = FG.NumAtoms();
+	mol = opt_ff(mol, numAtomFG, vec);
 
 	// write xyz file of new molecule
 	convMol.Write(&mol, &ofs);

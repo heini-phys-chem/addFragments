@@ -19,3 +19,6 @@ clean:
 	rm -rf main
 	rm -rf *.o *.gch
 	rm -rf test.xyz
+
+rm_xyz:
+	rm -rf xyz_out/*.xyz
