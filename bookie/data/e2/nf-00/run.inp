@@ -1,0 +1,14 @@
+! MP2 6-311G(d) OptTS NoFrozenCore ExtremeSCF NumFreq
+
+%pal nprocs 1
+end
+
+%mp2 MaxCore 10000
+end
+
+%geom
+Calc_Hess true
+NumHess true
+end
+
+*xyzfile -1 1 inp.xyz

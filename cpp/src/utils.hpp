@@ -33,43 +33,6 @@ OpenBabel::OBMol delete_FG(std::vector<int> to_delete, OpenBabel::OBMol mol) {
 	return mol; 
 }
 
-// get CH3
-std::vector<int> get_CH3(int C, OpenBabel::OBMol mol) {
-	std::vector<int> vec;
-	OpenBabel::OBAtom *atom, *atom2;
-	int counter;
-
-	atom = mol.GetAtom(C);
-
-	// outer loop over first neighbouring atoms
-  FOR_NBORS_OF_ATOM(nbr, atom) {
-		counter = 0;
-		if(nbr->GetIdx() == 1) continue;
-		if(nbr->GetIdx() == 2) continue;
-
-		if ( (mol.GetAtom(nbr->GetIdx()))->IsCarbon() ) {
-			atom2 = mol.GetAtom(nbr->GetIdx());
-
-			// inner loop over second neighbours
-			FOR_NBORS_OF_ATOM(nbr2, atom2) {
-				if(nbr2->GetIdx() == 1) continue;
-				if(nbr2->GetIdx() == 2) continue;
-
-				if ( (mol.GetAtom(nbr2->GetIdx()))->IsHydrogen() ) {
-					vec.push_back(nbr2->GetIdx());
-					std::cout << "atom2 #" << atom2->GetIdx() << " is bound to atom #" << nbr2->GetIdx() << std::endl;
-					counter++;
-				}
-			}
-			if( counter == 3) { 	
-				vec.push_back(nbr->GetIdx());
-				std::cout << "atom1 #" << atom->GetIdx() << " is bound to atom #" << nbr->GetIdx() << std::endl;
-			}
-		}
-	}
-	return vec;
-}
-
 // get H
 std::vector<int> get_H(int C, OpenBabel::OBMol mol) {
 	std::vector<int> vec;
@@ -84,7 +47,7 @@ std::vector<int> get_H(int C, OpenBabel::OBMol mol) {
 		if(nbr->GetIdx() == 5) continue;
 		if ( (mol.GetAtom(nbr->GetIdx()))->IsHydrogen() ) {
 			vec.push_back(nbr->GetIdx());
-			std::cout << "atomH #" << atom->GetIdx() << " is bound to atom #" << nbr->GetIdx() << std::endl;
+			//std::cout << "atomH #" << atom->GetIdx() << " is bound to atom #" << nbr->GetIdx() << std::endl;
 		}
 	}
 	return vec;
@@ -114,13 +77,13 @@ std::vector<int> get_NO2(int C, OpenBabel::OBMol mol) {
 
 				if ( (mol.GetAtom(nbr2->GetIdx()))->IsOxygen() ) {
 					vec.push_back(nbr2->GetIdx());
-					std::cout << "atom2 #" << atom2->GetIdx() << " is bound to atom #" << nbr2->GetIdx() << std::endl;
+					//std::cout << "atom2 #" << atom2->GetIdx() << " is bound to atom #" << nbr2->GetIdx() << std::endl;
 					counter++;
 				}
 			}
 			if( counter == 2) { 	
 				vec.push_back(nbr->GetIdx());
-				std::cout << "atom1 #" << atom->GetIdx() << " is bound to atom #" << nbr->GetIdx() << std::endl;
+				//std::cout << "atom1 #" << atom->GetIdx() << " is bound to atom #" << nbr->GetIdx() << std::endl;
 			}
 		}
 	}
@@ -151,13 +114,50 @@ std::vector<int> get_CN(int C, OpenBabel::OBMol mol) {
 
 				if ( (mol.GetAtom(nbr2->GetIdx()))->IsNitrogen() ) {
 					vec.push_back(nbr2->GetIdx());
-					std::cout << "atom2 #" << atom2->GetIdx() << " is bound to atom #" << nbr2->GetIdx() << std::endl;
+					//std::cout << "atom2 #" << atom2->GetIdx() << " is bound to atom #" << nbr2->GetIdx() << std::endl;
 					counter++;
 				}
 			}
 			if( counter == 1) { 	
 				vec.push_back(nbr->GetIdx());
-				std::cout << "atom1 #" << atom->GetIdx() << " is bound to atom #" << nbr->GetIdx() << std::endl;
+				//std::cout << "atom1 #" << atom->GetIdx() << " is bound to atom #" << nbr->GetIdx() << std::endl;
+			}
+		}
+	}
+	return vec;
+}
+
+// get CH3
+std::vector<int> get_CH3(int C, OpenBabel::OBMol mol) {
+	std::vector<int> vec;
+	OpenBabel::OBAtom *atom, *atom2;
+	int counter;
+
+	atom = mol.GetAtom(C);
+
+	// outer loop over first neighbouring atoms
+  FOR_NBORS_OF_ATOM(nbr, atom) {
+		counter = 0;
+		if(nbr->GetIdx() == 1) continue;
+		if(nbr->GetIdx() == 2) continue;
+
+		if ( (mol.GetAtom(nbr->GetIdx()))->IsCarbon() ) {
+			atom2 = mol.GetAtom(nbr->GetIdx());
+
+			// inner loop over second neighbours
+			FOR_NBORS_OF_ATOM(nbr2, atom2) {
+				if(nbr2->GetIdx() == 1) continue;
+				if(nbr2->GetIdx() == 2) continue;
+
+				if ( (mol.GetAtom(nbr2->GetIdx()))->IsHydrogen() ) {
+					vec.push_back(nbr2->GetIdx());
+					//std::cout << "atom2 #" << atom2->GetIdx() << " is bound to atom #" << nbr2->GetIdx() << std::endl;
+					counter++;
+				}
+			}
+			if( counter == 3) { 	
+				vec.push_back(nbr->GetIdx());
+				//std::cout << "atom1 #" << atom->GetIdx() << " is bound to atom #" << nbr->GetIdx() << std::endl;
 			}
 		}
 	}
@@ -188,13 +188,13 @@ std::vector<int> get_NH2(int C, OpenBabel::OBMol mol) {
 
 				if ( (mol.GetAtom(nbr2->GetIdx()))->IsHydrogen() ) {
 					vec.push_back(nbr2->GetIdx());
-					std::cout << "atom2 #" << atom2->GetIdx() << " is bound to atom #" << nbr2->GetIdx() << std::endl;
+					//std::cout << "atom2 #" << atom2->GetIdx() << " is bound to atom #" << nbr2->GetIdx() << std::endl;
 					counter++;
 				}
 			}
 			if( counter == 2) { 	
 				vec.push_back(nbr->GetIdx());
-				std::cout << "atom1 #" << atom->GetIdx() << " is bound to atom #" << nbr->GetIdx() << std::endl;
+				//std::cout << "atom1 #" << atom->GetIdx() << " is bound to atom #" << nbr->GetIdx() << std::endl;
 			}
 		}
 	}
@@ -209,7 +209,7 @@ OpenBabel::vector3 get_vector(std::vector<int> to_delete, OpenBabel::OBMol mol, 
 
 	std::sort(to_delete.begin(), to_delete.end());
 
-	std::cout << "to_delete[0] = " << to_delete[0]	<< std::endl;
+	//std::cout << "to_delete[0] = " << to_delete[0]	<< std::endl;
 	Idx = to_delete[0];
 
 	X = mol.GetAtom(Idx)->GetX();

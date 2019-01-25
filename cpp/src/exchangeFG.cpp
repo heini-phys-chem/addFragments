@@ -34,11 +34,12 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	std::cout << "\033[1;31m start new molecule \033[1;0m" << std::endl;
+	//std::cout << "\033[1;31m start new molecule \033[1;0m" << std::endl;
 
 	// cmd line arguments
 	std::string file_in = argv[1];
 	std::string file_out = argv[2];
+	std::string rxn = argv[3];
 
 	// declare OpenBabel variables 
 	OpenBabel::OBMol mol, FG;
@@ -63,7 +64,7 @@ int main(int argc, char *argv[])
 	in = get_R(file_in);
 	out = get_R(file_out);
 
-
+	// compare R1-R4 (strin in vs string out)
 	for( int i=0; i < 4; i++) {
 		if( in[i] == out[i] ) {
 			continue;
@@ -74,14 +75,18 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	std::string out_file_name;
-	out_file_name.append(file_in);
-	out_file_name.insert(0,"xyz_out/");
+	std::string out_file_name = "inp.xyz";
+/*
+	out_file_name.append("inp.xyz");
+  out_file_name.insert(0,"xyz_out/");
 	out_file_name.append("-");
 	out_file_name.append(file_out);
 	out_file_name.append(".xyz");
+*/
 
 	// some fancy print statements
+
+/*
 	std::cout << file_in.substr(5,7) << std::endl;
 	std::cout << file_out.substr(5,7) << std::endl;
 
@@ -89,19 +94,20 @@ int main(int argc, char *argv[])
 	std::cout << "\ntoDelete: " << toDelete << std::endl;
 	std::cout << "\nfgE: " << fgE << std::endl;
 	std::cout << "\nout_file: : " << out_file_name << std::endl;
+*/
 
 	// get Idx of C atom to exchange the FG
 	std::string base_in = file_in.substr(0, file_in.size()-4);
 	if( (position == 1) || (position == 2) ) {
 		C = 1;
-		if( in[0] == in[1] ) exit(EXIT_FAILURE);
+		if( in[0] == in[1] ) std::exit(EXIT_FAILURE);
 	} else {
 		C = 2;
-		if( in[2] == in[3] ) exit(EXIT_FAILURE);
+		if( in[2] == in[3] ) std::exit(EXIT_FAILURE);
 	}
 
 	// read in molecule 
-	file_in.insert(0,"xyz_in/");
+	file_in.insert(0,rxn);
 	file_in.append(".xyz");
 	std::ifstream ifs_mol;
 	ifs_mol.open(file_in.c_str());

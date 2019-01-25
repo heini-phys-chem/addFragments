@@ -1,0 +1,84 @@
+#TEST1: Empty
+StageStates.PENDING goP goR lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf nfP nfR sdA sdB sp
+StageStates.INPROGRESS 
+StageStates.COMPLETED 
+StageStates.BROKEN ts
+StageStates.FAILED 
+#TEST2: TS Prepared
+StageStates.PENDING goP goR lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf nfP nfR sdA sdB sp
+StageStates.INPROGRESS ts
+StageStates.COMPLETED 
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST3: TS-00 completed
+StageStates.PENDING goP goR lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf nfP nfR sdA sdB sp
+StageStates.INPROGRESS ts
+StageStates.COMPLETED 
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST3: TS-01 completed
+StageStates.PENDING goP goR lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nfP nfR sdA sdB sp
+StageStates.INPROGRESS nf
+StageStates.COMPLETED ts
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST4: NF-00 completed
+StageStates.PENDING goP goR lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nfP nfR sdA sdB sp
+StageStates.INPROGRESS nf
+StageStates.COMPLETED ts
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST5: NF-01 completed
+StageStates.PENDING goP goR nfP nfR sp
+StageStates.INPROGRESS lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 sdA sdB
+StageStates.COMPLETED nf ts
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST6: LS completed
+StageStates.PENDING goP goR nfP nfR sp
+StageStates.INPROGRESS sdA sdB
+StageStates.COMPLETED lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf ts
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST7: sdA-00 completed, but no run.xyz
+StageStates.PENDING goP goR nfP nfR sp
+StageStates.INPROGRESS sdB
+StageStates.COMPLETED lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf ts
+StageStates.BROKEN 
+StageStates.FAILED sdA
+#TEST8: sdA-00 completed
+StageStates.PENDING goP goR nfP nfR sp
+StageStates.INPROGRESS sdA sdB
+StageStates.COMPLETED lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf ts
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST9: sdA-00 completed
+StageStates.PENDING goP goR nfP nfR sp
+StageStates.INPROGRESS sdB
+StageStates.COMPLETED lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf sdA ts
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST10: sdB completed
+StageStates.PENDING nfP nfR
+StageStates.INPROGRESS goP goR
+StageStates.COMPLETED lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf sdA sdB sp ts
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST11: goR completed
+StageStates.PENDING nfP
+StageStates.INPROGRESS goP nfR
+StageStates.COMPLETED goR lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf sdA sdB sp ts
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST12: goP completed
+StageStates.PENDING 
+StageStates.INPROGRESS nfP nfR
+StageStates.COMPLETED goP goR lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf sdA sdB sp ts
+StageStates.BROKEN 
+StageStates.FAILED 
+#TEST13: nfR/nfP completed
+StageStates.PENDING 
+StageStates.INPROGRESS 
+StageStates.COMPLETED goP goR lsA0 lsA1 lsA2 lsA3 lsA4 lsA5 lsA6 lsA7 lsA8 lsA9 lsB0 lsB1 lsB2 lsB3 lsB4 lsB5 lsB6 lsB7 lsB8 lsB9 nf nfP nfR sdA sdB sp ts
+StageStates.BROKEN 
+StageStates.FAILED 

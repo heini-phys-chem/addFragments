@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# restore network connectivity
+chmod 600 ~/.ssh/id_rsa &> /dev/null
+test -f ~/.ssh/id_rsa.pub && grep "$(cat ~/.ssh/id_rsa.pub)" ~/.ssh/authorized_keys &> /dev/null
+if [ $? -ne 0 ]
+then
+	# create new key if not present already
+	cat /dev/zero | ssh-keygen -q -N ""
+	chmod 600 ~/.ssh/id_rsa &> /dev/null
+	echo '# the next entry is for wishlist' >> ~/.ssh/authorized_keys
+	cat .ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+	chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
+fi
+
+# try to connect to head node via any possible intermediary
+#for host in $(sinfo -h -O nodehost | sort -R)
+for host in login20
+do
+	ssh -o LogLevel=ERROR -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $host -C "ssh -o LogLevel=ERROR -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null 131.152.25.140 -C 'curl $1'" && break
+done
+

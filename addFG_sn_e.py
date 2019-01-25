@@ -5,7 +5,7 @@ import openbabel as ob
 
 def opt_mmff_FG(mol, numAtoms, outfile):
   # initialize force field and constraint classes
-  MMFF = ob.OBForceField.FindType("UFF")
+  MMFF = ob.OBForceField.FindType("MMFF94")
   constraints = ob.OBFFConstraints()
   conv = ob.OBConversion()
 
@@ -68,10 +68,11 @@ def exchangeAtom(C,H,molTS,molFG,outfile, bondLength):
   bond = TS.GetBond(C,numAtoms)
   bond.SetLength(atomC, bondLength)
 
+
   # call opimizer
   #opt_mmff_FG(TS, numAtoms, outfile)
 
-  convTS.WriteFile(TS, "out/" + outfile)
+  convTS.WriteFile(TS, "single/" + outfile)
 
   # clear TS and FG molecule classes
   TS.Clear()
@@ -81,8 +82,11 @@ if __name__ == "__main__":
 
   filename = sys.argv[1]
   name = os.path.splitext(filename)[0]
-  pathCoords = "/home/stefan/PhD/projects/reactions/sn_e/data_set/coords/"
+  pathCoords = "/home/stefan/PhD/projects/reactions/sn_e/e2/data_set/coords/"
   functionalGroups = ["B.xyz","C.xyz","D.xyz","E.xyz"]
+  positions = [1,2,3,4]
+  C = [1,1,2,2]
+  H = [5,6,7,8]
 
   print name
 
@@ -91,41 +95,21 @@ if __name__ == "__main__":
   pos3 = name.split('_')[3]
   pos4 = name.split('_')[4]
 
-  if pos1 != "A":
-    C = [1,2,2]
-    H = [6,7,8]
-    pos = [2,3,4]
-
-  if pos2 != "A":
-    C = [1,2,2]
-    H = [6,7,8]
-    pos = [1,3,4]
-
-  if pos3 != "A":
-    C = [1,1,2]
-    H = [6,7,8]
-    pos = [1,2,4]
-
-  if pos4 != "A":
-    C = [1,1,2]
-    H = [6,7,8]
-    pos = [1,2,3]
-
   print pos1, pos2, pos3, pos4
 
-  for FG in functionalGroups:
-    if FG == "D.xyz":
-      bondLength = 1.54
-    else:
-      bondLength = 1.47
+  for j,pos in enumerate(positions):
+    for FG in functionalGroups:
+      if FG == "D.xyz":
+        bondLength = 1.54
+      else:
+        bondLength = 1.47
 
-    for j,i in enumerate(pos):
-      if i==1: pos1=os.path.splitext(FG)[0]
-      if i==2: pos2=os.path.splitext(FG)[0]
-      if i==3: pos3=os.path.splitext(FG)[0]
-      if i==4: pos4=os.path.splitext(FG)[0]
+      if pos==1: pos1=os.path.splitext(FG)[0]
+      if pos==2: pos2=os.path.splitext(FG)[0]
+      if pos==3: pos3=os.path.splitext(FG)[0]
+      if pos==4: pos4=os.path.splitext(FG)[0]
 
-      outfile = "e2ts_" + pos1 + "_" + pos2 + "_" + pos3 + "_" + pos4 + ".xyz"
+      outfile = "product-sn2_" + pos1 + "_" + pos2 + "_" + pos3 + "_" + pos4 + "_0_A.xyz"
       print C[j], H[j]
       exchangeAtom(C[j], H[j], filename, pathCoords + FG, outfile, bondLength)
 

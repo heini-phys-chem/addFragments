@@ -1,18 +1,23 @@
 import sys
+import glob
 import re
 import openbabel as ob
 
 def opt_mmff_FG(mol, numAtoms, outfile):
     # initialize force field and constraint classes
-    MMFF = ob.OBForceField.FindType("MMFF94")
+    MMFF = ob.OBForceField.FindType("UFF")
     constraints = ob.OBFFConstraints()
     conv = ob.OBConversion()
+    conv.SetInAndOutFormats("xyz","xyz")
 
     # setup force field
     MMFF.Setup(mol)
 
+    end = mol.NumAtoms()
+
     # add constraints
     [constraints.AddAtomConstraint(i) for i in range(1,numAtoms)]
+    [constraints.AddAtomConstraint(i) for i in range(numAtoms+1,end)]
     MMFF.SetConstraints(constraints)
 
     # run optization 
@@ -23,7 +28,7 @@ def opt_mmff_FG(mol, numAtoms, outfile):
 
     # write to xyz file
     print outfile
-    conv.WriteFile(mol, "../out_xyz/" + outfile)
+    conv.WriteFile(mol, "out_xyz/" + outfile)
 
     # clear mol class
     mol.Clear()
@@ -64,6 +69,7 @@ def exchangeAtom(C,H,molTS,molFG,outfile):
 
     # call opimizer
     opt_mmff_FG(TS, numAtoms, outfile)
+    #convTS.WriteFile(TS, "out_xyz/" + outfile)
 
     # clear TS and FG molecule classes
     TS.Clear()
@@ -72,11 +78,18 @@ def exchangeAtom(C,H,molTS,molFG,outfile):
 if __name__ == "__main__":
 
     filename = sys.argv[1]
-    pathCoords = "/home/stefan/PhD/projects/reactions/claisen/data_set/coords/"
-    functionalGroups = ["br.xyz","cbr3.xyz","ccl3.xyz","cf3.xyz","ch3.xyz","cl.xyz","cn.xyz","coh.xyz","cooh.xyz","f.xyz","nh2.xyz","no2.xyz","och3.xyz","oh.xyz","ph.xyz"]
+    pathCoords = "/home/stefan/PhD/projects/reactions/claisen/data_set_new_FG/xyz/coords_new/"
+    functionalGroups = ["BOH2.xyz", "Br.xyz", "CC_DB.xyz", "CC_TB.xyz", "Cl.xyz", "COCl.xyz", "CONH2.xyz", "COOCH3.xyz", "COSH.xyz", "COSMe.xyz", "CSOH.xyz", "F.xyz", "MgCl.xyz", "N2.xyz", "N3.xyz", "NHNH2.xyz", "OCOCH3.xyz", "OH.xyz", "OMe.xyz", "ONH2.xyz", "PH2.xyz", "SH.xyz", "SiME3.xyz", "NH2.xyz", "NO2.xyz", "CN.xyz"]
+    positions = ["2.1", "2.2", "3", "4.1", "4.2", "5", "6.1", "6.2"]
+    H = [7,8,9,10,11,12,13,14]
+    C = [2,2,3,4,4,5,6,6]
 
-    print filename
-
+    for functionalGroup in functionalGroups:
+      for i,position in enumerate(positions):
+        outfile = position + "_" + functionalGroup[:-4] + ".xyz"
+        fg = str(pathCoords) + str(functionalGroup)
+        exchangeAtom(C[i], H[i], filename, fg, outfile)
+'''
     pos1 = filename.split('_')[0]
     print "pos1: " + str(pos1)
     FG1 = (filename.split('_')[1])[:-4]
@@ -142,3 +155,4 @@ if __name__ == "__main__":
                 outfile = str(pos1) + "_" + str(FG1) + "_" + str(pos2) + "_" + str(FG2) + ".xyz"
                 exchangeAtom(lst_C[i],lst_H[i],filename,pathCoords + FG2xyz,outfile)
 
+'''
