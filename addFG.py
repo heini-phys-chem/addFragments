@@ -77,10 +77,14 @@ def exchangeAtom(C,H,molTS,molFG,outfile):
 
 if __name__ == "__main__":
 
-    filename = sys.argv[1]
+    filename = sys.argv[1] # reactant or product xyz file
     pathCoords = "/home/stefan/PhD/projects/reactions/claisen/data_set_new_FG/xyz/coords_new/"
+    # functional grous missing 1 hydrogen
     functionalGroups = ["BOH2.xyz", "Br.xyz", "CC_DB.xyz", "CC_TB.xyz", "Cl.xyz", "COCl.xyz", "CONH2.xyz", "COOCH3.xyz", "COSH.xyz", "COSMe.xyz", "CSOH.xyz", "F.xyz", "MgCl.xyz", "N2.xyz", "N3.xyz", "NHNH2.xyz", "OCOCH3.xyz", "OH.xyz", "OMe.xyz", "ONH2.xyz", "PH2.xyz", "SH.xyz", "SiME3.xyz", "NH2.xyz", "NO2.xyz", "CN.xyz"]
+    # position in the output filename
     positions = ["2.1", "2.2", "3", "4.1", "4.2", "5", "6.1", "6.2"]
+
+    # position in the xyz file
     H = [7,8,9,10,11,12,13,14]
     C = [2,2,3,4,4,5,6,6]
 
